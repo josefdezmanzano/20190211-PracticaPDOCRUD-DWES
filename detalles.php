@@ -9,10 +9,10 @@
    <!-- Mis estilos -->
    <link rel="stylesheet" href="css/estilos.css">
 
-<style>
+   <style>
   *{
     font-family: 'Lobster', cursive;
-   
+    font-family: 'Roboto', sans-serif;   
   }
 body {
 background-color: #536dfe;
@@ -46,68 +46,71 @@ th{
   text-align: center;
   font-family: 'Indie Flower', cursive;
 }
-</style>    
-  <link href="https://fonts.googleapis.com/css?family=Permanent+Marker" rel="stylesheet"> 
+</style>
+ <link href="https://fonts.googleapis.com/css?family=Permanent+Marker|Roboto" rel="stylesheet"> 
  <title>Index</title>
   </head>
   <?php
-  spl_autoload_register(function ($clase) {
-    require './clases/' . $clase . '.php';
-  });
-  ?>
+    spl_autoload_register(function ($clase) {
+        require './clases/' . $clase . '.php';
+    });
+    ?>
   <body>
  
 
 <div class="mivdivcentral">
 <h1 class="mititulo">La Base de datos de los personajes de Almeria</h1>
     <div class="container">
-    <a class="btn btn-primary mt-2" style="margin-bottom: 1%;" href="insertar.php">Nuevo Personaje</a>  
-    
   <ul class="list-group">
   <li class="list-group-item">Detalles</li>
  <?php 
 
-  $dbc = new Conexion();
-  $millave = $dbc->getLllave();
-  $personaje = new Personaje($millave);
- 
-  $stmt = $personaje->read();
-  while ($fila = $stmt->fetch(PDO::FETCH_OBJ)) {
-    
-    echo "<li class='list-group-item list-group-item-dark'>".$fila->nombre."</li>";
-    echo "<li class='list-group-item list-group-item-dark'>".$fila->apellidos."</li>";
-    echo "<li class='list-group-item list-group-item-dark'>".$fila->biografia."</li>";
-    echo "<li class='list-group-item list-group-item-dark'>".$fila->categoria."</li>";
-    echo "<li class='list-group-item list-group-item-dark'>".$fila->wanted."</li>";
-    echo "<li class='list-group-item list-group-item-dark'>".$fila->nombre."</li>";
-    echo "<li class='list-group-item list-group-item-dark'>".$fila->nombre."</li>";
-    echo "<div class='container mt-4'>";
+if (isset($_GET["id"])) {
+    //conexion-----------------
 
-    echo "<img src='".$fila->foto ."' alt='No apto para ojos sensibles' height='400' width='600'> ";
-    
-    echo "</div>";
-    echo " <tr>";
-    echo "      <th scope='row'>" . $fila->id. "</th>";
-    echo "      <td>" . $fila->nombre . "</td>";
-    echo "      <td>" . $fila->apellidos . "</td>";
-    echo "      <td>" . $fila->biografia . "</td>";
-    echo "      <td>" . $fila->categoria . "</td>";
-    echo "      <td>" . $fila->wanted . "</td>";
-    echo "      <td>" . "<img src='".$fila->foto ."' alt='No apto para ojos sensibles' height='400' width='600'> " . "</td>";
-    echo "      <td>"
-      . "<a style='display:inline; margin:1%;' href='actualizar.php?id=" . $fila->id . "'class='btn btn-warning'>" . "Actualizar" . "</a>"
-      . "<a style='display:inline; margin:1%;' href='borrar.php?id=" . $fila->id . "'class='btn btn-danger'>" . "Borrar" . "</a>" . "</td>";
-    echo "  </tr>";
-  }
-                    //Cerramos la conexion
-  $stmt = null;
-  $millave = null;
-  ?>
+
+
+    $dbc = new Conexion();
+    $millave = $dbc->getLllave();
+    $id = $_GET['id'];
+    $consulta = "select * from personajes where id=:id";
+  //$insert = "insert into personajes(nombre, apellidos,biografia,categoria,wanted) 
+  //values (:nombre,:apellidos,:biografia,:categoria,:wanted)";
+  //$foto=$_POST['foto'];
+
+
+     //Preparamos
+    $stmt = $millave->prepare($consulta);
+    //asignamos el fetch indicando que hay varios tipos
+    $stmt->setFetchMode(PDO::FETCH_ASSOC);
+      //ejecutmos la consulta
+    $stmt->execute(array(':id' => $id));
+      //echo "Nuevo personaje insertado correctamente, ya puedes disfrutar de sus andanzas";
+      //pintamos lo datos
+    while ($fila = $stmt->fetch()) {
+        echo "<li class='list-group-item list-group-item-dark'>Nombre: " . $fila['nombre'] . "</li>";
+        echo "<li class='list-group-item list-group-item-dark'>Apellidos: " . $fila['apellidos'] . "</li>";
+        echo "<li class='list-group-item list-group-item-dark'>Biografía: " . $fila['biografia'] . "</li>";
+        echo "<li class='list-group-item list-group-item-dark'>Categoria: " . $fila['categoria'] . "</li>";
+        echo "<li class='list-group-item list-group-item-dark'>¿En busca y captura?: " . $fila['wanted'] . "</li>";
+        echo "<div class='container text-center mt-4' >";
+        echo "<h2 class='text-center mt-2 mititulo'> Foto de perfil</h2>";
+        echo "<img  style='border:3pt solid black;' src='" . $fila['foto'] . "' alt='No apto para ojos sensibles' height='400' width='600'> ";
+    }
+  //Cerramos la conexion
+    $stmt = null;
+    $millave = null;
+    ?>
   </ul>
-
+  <center><a class="btn btn-dark mt-3" href="index.php">Volver</a></center>
 </div>
 
 </div>
+<?php 
+
+}
+
+?>
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>

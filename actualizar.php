@@ -9,18 +9,20 @@
    <!-- Mis estilos -->
    <link rel="stylesheet" href="css/estilos.css">
 
-<style>
+   <style>
   *{
-    font-family: 'Atomic Age', cursive;
+    font-family: 'Lobster', cursive;
+    font-family: 'Roboto', sans-serif;   
   }
 body {
 background-color: #536dfe;
 }
 .mititulo{
     text-shadow: 3px 3px 5px whitesmoke,
-        6px 6px 5px #0f0,
-        9px 9px 5px #00f;
-        font-family: 'Staatliches', cursive; text-align: center !important;
+        6px 6px 5px blueviolet,
+        9px 9px 5px blue;
+        font-family: 'Permanent Marker', cursive;
+        text-align: center !important;
 }
 .table{
 margin-top:auto;  
@@ -40,10 +42,12 @@ margin-bottom: 10%;
   padding: 10px;
   box-shadow: 5px 5px 8px gray, 10px 10px 8px black, 15px 15px 8px blue;
 }
-</style>    
-
-<link href="https://fonts.googleapis.com/css?family=Hanalei+Fill|Indie+Flower|Staatliches" rel="stylesheet">
-
+th{
+  text-align: center;
+  font-family: 'Indie Flower', cursive;
+}
+</style>
+ <link href="https://fonts.googleapis.com/css?family=Permanent+Marker|Roboto" rel="stylesheet"> 
  <title>Index</title>
   </head>
   <?php
@@ -170,9 +174,10 @@ if (isset($_GET["id"])) {
   <option value="NO" >NO</option>
 </select>
   </div>
-  <label for="foto">Foto </label>
+  <label class="mititulo" for="foto">Foto </label><br>
 <input type="file" name="foto" value="<?php echo $fila['foto']; ?>">
   <button type="submit" name="btn_env" class="btn btn-primary">Actualizar persona potencialmente peligrosa</button>
+<a class="btn btn-dark" href="index.php">Volver</a>
 </form>
 </div>
 <?php 

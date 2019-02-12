@@ -82,11 +82,13 @@ class Personaje
         $stmt=$conexion->prepare($delete);
         return $stmt;
     }
-    public function show()
+    public function show($conexion)
     {
-        $query = 'select * from ' . $this->tablas . ' order by id asc';
+        $query = 'select * from ' . $this->tablas . ' where id=:id';
         //preparamos la consulta
-        $stmt = $this->conexion->prepare($query);
+        $stmt = $conexion->prepare($query);
+        $stmt->setFetchMode(PDO::FETCH_ASSOC);
+
         //ejecutamos
         //si elegimos devolver los datos en array asociativo
         //$stmt->setFetchMode(PDO::FETCH_CLASS, 'alumnos');

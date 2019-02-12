@@ -12,7 +12,7 @@
 <style>
   *{
     font-family: 'Lobster', cursive;
-   
+    font-family: 'Roboto', sans-serif;   
   }
 body {
 background-color: #536dfe;
@@ -46,9 +46,9 @@ th{
   text-align: center;
   font-family: 'Indie Flower', cursive;
 }
-</style>    
-  <link href="https://fonts.googleapis.com/css?family=Permanent+Marker" rel="stylesheet"> 
- <title>Index</title>
+</style>
+ <link href="https://fonts.googleapis.com/css?family=Permanent+Marker|Roboto" rel="stylesheet"> 
+<title>Index</title>
   </head>
   <?php
   spl_autoload_register(function ($clase) {
@@ -96,8 +96,10 @@ th{
     echo "      <td>" . "<img src='".$fila->foto ."' alt='No apto para ojos sensibles' height='150' width='150'> " . "</td>";
     echo "      <td>"
       . "<a style='display:inline; margin:1%;' href='actualizar.php?id=" . $fila->id . "'class='btn btn-warning'>" . "Actualizar" . "</a>"
-      . "<a style='display:inline; margin:1%;' href='borrar.php?id=" . $fila->id . "'class='btn btn-danger'>" . "Borrar" . "</a>" . "</td>";
-    echo "  </tr>";
+      . "<a style='display:inline; margin:1%;' href='borrar.php?id=" . $fila->id . "'class='btn btn-danger'>" . "Borrar" . "</a>"
+      . "<a style='display:inline; margin:1%;' href='detalles.php?id=" . $fila->id . "'class='btn btn-dark'>" . "Detalles" . "</a>" . "</td>";
+    
+      echo "  </tr>";
   }
                     //Cerramos la conexion
   $stmt = null;
