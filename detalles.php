@@ -62,30 +62,30 @@ th{
 <h1 class="mititulo">La Base de datos de los personajes de Almeria</h1>
     <div class="container">
     <a class="btn btn-primary mt-2" style="margin-bottom: 1%;" href="insertar.php">Nuevo Personaje</a>  
-    <table class="table">
-  <thead class="thead-dark">
-    <tr>
-      <th scope="col">#</th>
-      <th scope="col">Nombre</th>
-      <th scope="col">Apellidos</th>
-      <th scope="col">Biografía</th>
-      <th scope="col">Categoria</th>      
-      <th scope="col">¿En Busca y captura?</th>
-      <th scope="col">Foto</th>
-      <th scope="col">Acciones</th>
-
     
-    </tr>
-  </thead>
-  <tbody>
-  <?php 
+  <ul class="list-group">
+  <li class="list-group-item">Detalles</li>
+ <?php 
 
   $dbc = new Conexion();
   $millave = $dbc->getLllave();
   $personaje = new Personaje($millave);
-
+ 
   $stmt = $personaje->read();
   while ($fila = $stmt->fetch(PDO::FETCH_OBJ)) {
+    
+    echo "<li class='list-group-item list-group-item-dark'>".$fila->nombre."</li>";
+    echo "<li class='list-group-item list-group-item-dark'>".$fila->apellidos."</li>";
+    echo "<li class='list-group-item list-group-item-dark'>".$fila->biografia."</li>";
+    echo "<li class='list-group-item list-group-item-dark'>".$fila->categoria."</li>";
+    echo "<li class='list-group-item list-group-item-dark'>".$fila->wanted."</li>";
+    echo "<li class='list-group-item list-group-item-dark'>".$fila->nombre."</li>";
+    echo "<li class='list-group-item list-group-item-dark'>".$fila->nombre."</li>";
+    echo "<div class='container mt-4'>";
+
+    echo "<img src='".$fila->foto ."' alt='No apto para ojos sensibles' height='400' width='600'> ";
+    
+    echo "</div>";
     echo " <tr>";
     echo "      <th scope='row'>" . $fila->id. "</th>";
     echo "      <td>" . $fila->nombre . "</td>";
@@ -93,7 +93,7 @@ th{
     echo "      <td>" . $fila->biografia . "</td>";
     echo "      <td>" . $fila->categoria . "</td>";
     echo "      <td>" . $fila->wanted . "</td>";
-    echo "      <td>" . "<img src='".$fila->foto ."' alt='No apto para ojos sensibles' height='150' width='150'> " . "</td>";
+    echo "      <td>" . "<img src='".$fila->foto ."' alt='No apto para ojos sensibles' height='400' width='600'> " . "</td>";
     echo "      <td>"
       . "<a style='display:inline; margin:1%;' href='actualizar.php?id=" . $fila->id . "'class='btn btn-warning'>" . "Actualizar" . "</a>"
       . "<a style='display:inline; margin:1%;' href='borrar.php?id=" . $fila->id . "'class='btn btn-danger'>" . "Borrar" . "</a>" . "</td>";
@@ -103,8 +103,7 @@ th{
   $stmt = null;
   $millave = null;
   ?>
-  </tbody>
-</table>
+  </ul>
 
 </div>
 

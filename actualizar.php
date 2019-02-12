@@ -47,46 +47,103 @@ margin-bottom: 10%;
  <title>Index</title>
   </head>
   <?php
-    spl_autoload_register(function ($clase) {
-        require './clases/' . $clase . '.php';
-    });
-    ?>
+  spl_autoload_register(function ($clase) {
+    require './clases/' . $clase . '.php';
+  });
+  ?>
   <body>
  <?php 
+if (isset($_POST['btn_env'])) {
+
+  $nombre = $_POST['nombre'];
+  $apellidos = $_POST['apellidos'];
+  $biografia = $_POST['biografia'];
+  $categoria = $_POST['categoria'];
+  $wanted = $_POST['wanted'];
+  
+  
+
+  if (is_uploaded_file($_FILES['foto']['tmp_name'])) {
+    //print_r($_FILES['portada']);
+    $permitidos = array('image/png', 'image/jpg', 'image/jpeg', 'image/gif', 'image/tiff', 'img/bmp');
+
+    if (!in_array($_FILES['foto']['type'], $permitidos)) {
+      echo "El archivo debe ser una imagen!!!!!!!!!!!!!";
+      die();
+    }
+
+    $dir_uploads = 'img/avatares/';
+    $nombreF1 = $_FILES['foto']['name'];
+    $id_time = time();
+    $nombreF2 = $dir_uploads . $id_time . '-' . $nombreF1;
+    move_uploaded_file($_FILES['foto']['tmp_name'], $nombreF2);
+
+    $foto = $nombreF2;
+
+    $dbc = new Conexion();
+    $conexion = $dbc->getLllave();
+
+    $personaje = new Personaje($conexion, $nombre, $apellidos, $biografia, $categoria, $wanted, $foto);
+
+    $stmt = $personaje->update($conexion);
+
+    $stmt->execute(array(
+      ':nombre' => $nombre,
+      ':apellidos' => $apellidos,
+      ':biografia' => $biografia,
+      ':categoria' => $categoria,
+      ':wanted' => $wanted,
+      ':foto' => $foto,
+      ':id' => $_GET['id']
+    ));
+    if (!$stmt) {
+      echo "Error al insertar !!!!!!!!!";
+      die();
+    }
+    //echo "Personaje potenciamente peligroso insertado correctamente";
+    //echo "<a calss='btn btn-warning' href='index.php'>Volver</a>";
+    //Si llegamos aqui se ha guardado el alumno
+  //Y cerramos la conexion
+    unset($_POST['btn_env']);
+    $stmt = null;
+    $millave = null;
+    header("Location:index.php");
+  }
+
+}
 
 if (isset($_GET["id"])) {
     //conexion-----------------
-    $dbc = new Conexion();
-    $millave = $dbc->getLllave();
-    $id=$_GET['id'];
-
-    $consulta="select * from personajes where id=:id";
+  $dbc = new Conexion();
+  $millave = $dbc->getLllave();
+  $id = $_GET['id']; 
+  $consulta = "select * from personajes where id=:id";
     //$insert = "insert into personajes(nombre, apellidos,biografia,categoria,wanted) 
     //values (:nombre,:apellidos,:biografia,:categoria,:wanted)";
     //$foto=$_POST['foto'];
 
   
        //Preparamos
-        $stmt = $millave->prepare($consulta);
-//asignamos el fetch indicando que hay varios tipos
-        $stmt->setFetchMode(PDO::FETCH_ASSOC);
+  $stmt = $millave->prepare($consulta);
+      //asignamos el fetch indicando que hay varios tipos
+  $stmt->setFetchMode(PDO::FETCH_ASSOC);
         //ejecutmos la consulta
-        $stmt->execute(array(':id' => $id));
+  $stmt->execute(array(':id' => $id));
         //echo "Nuevo personaje insertado correctamente, ya puedes disfrutar de sus andanzas";
         //pintamos lo datos
-        while($fila=$stmt->fetch()){
-          
+  while ($fila = $stmt->fetch()) {
 
 
 
-?>
+
+    ?>
 
 <div class="mivdivcentral">
 <h1 class="mititulo">Actualizar Personaje</h1>
     <div class="container">
    
    
-    <form name="f1" action="insertar.php" method="POST">
+    <form name="f1" action="" enctype="multipart/form-data" method="POST">
 
     <div class="form-group">
     <label for="exampleInputPassword1">Nombre:</label>
@@ -102,15 +159,19 @@ if (isset($_GET["id"])) {
   </div>
   <div class="form-group">
     <label for="exampleInputPassword1">Categoria:</label>
-    <input type="text" class="form-control" id="exampleInputPassword1" name="categoria" value="<?php echo $fila['categoria'];  ?>">
+    <input type="text" class="form-control" id="exampleInputPassword1" name="categoria" value="<?php echo $fila['categoria']; ?>">
   </div>
   <div class="form-group">
-    <label for="exampleInputPassword1">Wanted:</label>
+    <p >¿Se busca?:<?php echo $fila['wanted']; ?>
+    </p>
+    <label for="exampleInputPassword1">Cambiar estado de busqueda:</label>
     <select class="form-control form-control-sm" name="wanted">
   <option value="SI" >SI</option>
   <option value="NO" >NO</option>
 </select>
   </div>
+  <label for="foto">Foto </label>
+<input type="file" name="foto" value="<?php echo $fila['foto']; ?>">
   <button type="submit" name="btn_env" class="btn btn-primary">Actualizar persona potencialmente peligrosa</button>
 </form>
 </div>

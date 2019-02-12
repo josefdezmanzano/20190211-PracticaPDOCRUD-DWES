@@ -47,50 +47,74 @@ margin-bottom: 10%;
  <title>Index</title>
   </head>
   <?php
-    spl_autoload_register(function ($clase) {
-        require './clases/' . $clase . '.php';
-    });
-    ?>
+  spl_autoload_register(function ($clase) {
+    require './clases/' . $clase . '.php';
+  });
+  ?>
   <body>
  <?php 
 if (isset($_POST['btn_env'])) {
+  $nombre = $_POST['nombre'];
+  $apellidos = $_POST['apellidos'];
+  $biografia = $_POST['biografia'];
+  $categoria = $_POST['categoria'];
+  $wanted = $_POST['wanted'];
 
-    $nombre = $_POST['nombre'];
-    $apellidos = $_POST['apellidos'];
-    $biografia = $_POST['biografia'];
-    $categoria = $_POST['categoria'];
-    $wanted = $_POST['wanted'];
-    $insert = "insert into personajes(nombre, apellidos,biografia,categoria,wanted) 
-    values (:nombre,:apellidos,:biografia,:categoria,:wanted)";
-    //$foto=$_POST['foto'];
+  if (is_uploaded_file($_FILES['foto']['tmp_name'])) {
+    //print_r($_FILES['portada']);
+    $permitidos = array('image/png', 'image/jpg', 'image/jpeg', 'image/gif', 'image/tiff', 'img/bmp');
 
-    try {
-        $dbc = new Conexion();
-        $millave = $dbc->getLllave();
-        $stmt = $millave->prepare($insert);
-        $stmt->execute(array(':nombre' => $nombre, ':apellidos' => $apellidos, ':biografia' => $biografia, ':categoria' => $categoria, ':wanted' => $wanted));
-        echo "Nuevo personaje insertado correctamente, ya puedes disfrutar de sus andanzas";
-    } catch (Exception $ex) {
-        echo $ex->getMessage();
-        die();
+    if (!in_array($_FILES['foto']['type'], $permitidos)) {
+      echo "El archivo debe ser una imagen!!!!!!!!!!!!!";
+      die();
     }
-     //Si llegamos aqui se ha guardado el alumno
-                //Y cerramos la conexion
-                unset($_POST['btn_env']);
-                $stmt = null;
-                $millave = null;
-                header("Location:index.php");
 
-}
+    $dir_uploads = 'img/avatares/';
+    $nombreF1 = $_FILES['foto']['name'];
+    $id_time = time();
+    $nombreF2 = $dir_uploads . $id_time . '-' . $nombreF1;
+    move_uploaded_file($_FILES['foto']['tmp_name'], $nombreF2);
 
-?>
+    $foto = $nombreF2;
+  
+    $dbc = new Conexion();
+    $conexion = $dbc->getLllave();
+
+    $personaje = new Personaje($conexion, $nombre, $apellidos, $biografia, $categoria, $wanted, $foto);
+    
+    $stmt = $personaje->create($conexion);
+
+    $stmt->execute(array(
+      ':nombre' => $nombre,
+      ':apellidos' => $apellidos,
+      ':biografia' => $biografia,
+      ':categoria' => $categoria,
+      ':wanted' => $wanted,
+      ':foto' => $foto
+    ));
+    if (!$stmt) {
+      echo "Error al insertar !!!!!!!!!";
+      die();
+    }
+    //echo "Personaje potenciamente peligroso insertado correctamente";
+    //echo "<a calss='btn btn-warning' href='index.php'>Volver</a>";
+    //Si llegamos aqui se ha guardado el alumno
+  //Y cerramos la conexion
+    unset($_POST['btn_env']);
+    $stmt = null;
+    $millave = null;
+  header("Location:index.php");
+  }
+  }
+
+  ?>
 
 <div class="mivdivcentral">
 <h1 class="mititulo">Nuevo Personaje</h1>
     <div class="container">
    
    
-    <form name="f1" action="insertar.php" method="POST">
+    <form name="f1" action="insertar.php" enctype="multipart/form-data" method="POST">
 
     <div class="form-group">
     <label for="exampleInputPassword1">Nombre:</label>
@@ -115,6 +139,9 @@ if (isset($_POST['btn_env'])) {
   <option value="NO" >NO</option>
 </select>
   </div>
+  <label for="foto">Foto </label>
+<input type="file" name="foto">
+
   <button type="submit" name="btn_env" class="btn btn-primary">Registrar persona potencialmente peligrosa</button>
 </form>
 </div>
