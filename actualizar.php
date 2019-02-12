@@ -53,40 +53,36 @@ margin-bottom: 10%;
     ?>
   <body>
  <?php 
-if (isset($_POST['btn_env'])) {
 
-    $nombre = $_POST['nombre'];
-    $apellidos = $_POST['apellidos'];
-    $biografia = $_POST['biografia'];
-    $categoria = $_POST['categoria'];
-    $wanted = $_POST['wanted'];
-    $insert = "insert into personajes(nombre, apellidos,biografia,categoria,wanted) 
-    values (:nombre,:apellidos,:biografia,:categoria,:wanted)";
+if (isset($_GET["id"])) {
+    //conexion-----------------
+    $dbc = new Conexion();
+    $millave = $dbc->getLllave();
+    $id=$_GET['id'];
+
+    $consulta="select * from personajes where id=:id";
+    //$insert = "insert into personajes(nombre, apellidos,biografia,categoria,wanted) 
+    //values (:nombre,:apellidos,:biografia,:categoria,:wanted)";
     //$foto=$_POST['foto'];
 
-    try {
-        $dbc = new Conexion();
-        $millave = $dbc->getLllave();
-        $stmt = $millave->prepare($insert);
-        $stmt->execute(array(':nombre' => $nombre, ':apellidos' => $apellidos, ':biografia' => $biografia, ':categoria' => $categoria, ':wanted' => $wanted));
-        echo "Nuevo personaje insertado correctamente, ya puedes disfrutar de sus andanzas";
-    } catch (Exception $ex) {
-        echo $ex->getMessage();
-        die();
-    }
-     //Si llegamos aqui se ha guardado el alumno
-                //Y cerramos la conexion
-                unset($_POST['btn_env']);
-                $stmt = null;
-                $millave = null;
-                header("Location:index.php");
+  
+       //Preparamos
+        $stmt = $millave->prepare($consulta);
+//asignamos el fetch indicando que hay varios tipos
+        $stmt->setFetchMode(PDO::FETCH_ASSOC);
+        //ejecutmos la consulta
+        $stmt->execute(array(':id' => $id));
+        //echo "Nuevo personaje insertado correctamente, ya puedes disfrutar de sus andanzas";
+        //pintamos lo datos
+        while($fila=$stmt->fetch()){
+          
 
-}
+
 
 ?>
 
 <div class="mivdivcentral">
-<h1 class="mititulo">Nuevo Personaje</h1>
+<h1 class="mititulo">Actualizar Personaje</h1>
     <div class="container">
    
    
@@ -94,19 +90,19 @@ if (isset($_POST['btn_env'])) {
 
     <div class="form-group">
     <label for="exampleInputPassword1">Nombre:</label>
-    <input type="text" class="form-control" id="exampleInputPassword1" name="nombre" placeholder="Introducel el Nombre">
+    <input type="text" class="form-control" id="exampleInputPassword1" name="nombre" value="<?php echo $fila['nombre']; ?>">
   </div>
   <div class="form-group">
     <label for="exampleInputPassword1">Apellidos:</label>
-    <input type="text" class="form-control" id="exampleInputPassword1" name="apellidos" placeholder="Introducel el Apellido">
+    <input type="text" class="form-control" id="exampleInputPassword1" name="apellidos" value="<?php echo $fila['apellidos']; ?>">
   </div>
   <div class="form-group">
     <label for="exampleInputPassword1">Biografía:</label>
-    <input type="text" class="form-control" id="exampleInputPassword1" name="biografia" placeholder="Introducel la Biografía">
+    <textarea class="form-control" id="exampleInputPassword1" name="biografia"><?php echo $fila['biografia']; ?></textarea>
   </div>
   <div class="form-group">
     <label for="exampleInputPassword1">Categoria:</label>
-    <input type="text" class="form-control" id="exampleInputPassword1" name="categoria" placeholder="Categoria">
+    <input type="text" class="form-control" id="exampleInputPassword1" name="categoria" value="<?php echo $fila['categoria'];  ?>">
   </div>
   <div class="form-group">
     <label for="exampleInputPassword1">Wanted:</label>
@@ -115,10 +111,18 @@ if (isset($_POST['btn_env'])) {
   <option value="NO" >NO</option>
 </select>
   </div>
-  <button type="submit" name="btn_env" class="btn btn-primary">Registrar persona potencialmente peligrosa</button>
+  <button type="submit" name="btn_env" class="btn btn-primary">Actualizar persona potencialmente peligrosa</button>
 </form>
 </div>
+<?php 
+}
+unset($_POST['btn_env']);
+$stmt = null;
+$millave = null;
 
+//header("Location:index.php");
+}
+?>
 </div>
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->

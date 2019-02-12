@@ -7,23 +7,47 @@
     <!-- Bootstrap CSS -->
    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
    <!-- Mis estilos -->
-   <link rel="stylesheet" href="">
+   <link rel="stylesheet" href="css/estilos.css">
 
 <style>
   *{
-    font-family: 'Atomic Age', cursive;
+    font-family: 'Lobster', cursive;
+   
   }
 body {
 background-color: #536dfe;
 }
 .mititulo{
     text-shadow: 3px 3px 5px whitesmoke,
-        6px 6px 5px #0f0,
-        9px 9px 5px #00f;
-        font-family: 'Staatliches', cursive; text-align: center !important;
+        6px 6px 5px blueviolet,
+        9px 9px 5px blue;
+        font-family: 'Permanent Marker', cursive;
+        text-align: center !important;
+}
+.table{
+margin-top:auto;  
+margin-bottom: 10%;
+
+}
+.mivdivcentral{
+  background-color: #b0bec5;
+  width:auto;
+  height: auto;
+  border-radius: 15px 50px;
+  display: table;
+  margin: 0 auto;
+  margin-top: 5%;
+  margin-bottom: 5%;
+  border: 1px solid;
+  padding: 10px;
+  box-shadow: 5px 5px 8px gray, 10px 10px 8px black, 15px 15px 8px blue;
+}
+th{
+  text-align: center;
+  font-family: 'Indie Flower', cursive;
 }
 </style>    
-<link href="https://fonts.googleapis.com/css?family=Atomic+Age|Major+Mono+Display|Staatliches" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Permanent+Marker" rel="stylesheet"> 
  <title>Index</title>
   </head>
   <?php
@@ -32,9 +56,12 @@ background-color: #536dfe;
   });
   ?>
   <body>
-  <h1 class="mititulo">La Base de datos de los personajes de Almeria</h1>
+ 
 
+<div class="mivdivcentral">
+<h1 class="mititulo">La Base de datos de los personajes de Almeria</h1>
     <div class="container">
+    <a class="btn btn-primary mt-2" style="margin-bottom: 1%;" href="insertar.php">Nuevo Personaje</a>  
     <table class="table">
   <thead class="thead-dark">
     <tr>
@@ -45,6 +72,8 @@ background-color: #536dfe;
       <th scope="col">Categoria</th>      
       <th scope="col">¿En Busca y captura?</th>
       <th scope="col">Foto</th>
+      <th scope="col">Acciones</th>
+
     
     </tr>
   </thead>
@@ -72,7 +101,9 @@ background-color: #536dfe;
     echo "      <td>" . $fila['categoria'] . "</td>";
     echo "      <td>" . $fila['wanted'] . "</td>";
     echo "      <td>" . $fila['foto'] . "</td>";
-        //echo "      <td>" . "<a href='update.php?id=" . $fila['id_al'] . "'class='btn btn-success'>" . "Update" . "</a></td>";
+    echo "      <td>" 
+    . "<a style='display:inline; margin:1%;' href='actualizar.php?id=" . $fila['id'] . "'class='btn btn-warning'>" . "Actualizar" . "</a>"
+    . "<a style='display:inline; margin:1%;' href='borrar.php?id=" . $fila['id'] . "'class='btn btn-danger'>" . "Borrar" . "</a>"."</td>";
     echo "  </tr>";
   }
                     //Cerramos la conexion
@@ -80,10 +111,9 @@ background-color: #536dfe;
   $millave = null;
   ?>
   </tbody>
-
-
-
 </table>
+
+</div>
 
 </div>
     <!-- Optional JavaScript -->
