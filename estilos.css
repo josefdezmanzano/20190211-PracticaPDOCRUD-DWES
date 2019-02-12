@@ -1,0 +1,11 @@
+body {
+    background-color: #536dfe;
+}
+#mititulo{
+    text-shadow: 3px 3px 5px #2196f3,
+        6px 6px 5px #0f0,
+        9px 9px 5px #00f;
+        font-family: 'Staatliches', cursive; text-align: center !important;
+
+
+}
