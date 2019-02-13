@@ -15,5 +15,5 @@ insert into personajes(nombre, apellidos,biografia,categoria,wanted,foto) values
 
 insert into personajes(nombre, apellidos,biografia,categoria,wanted,foto) values ('Jose Abel','El delator','Buscado en 7 paises por chivato, culpable de la desaparicion de moises por haberle dicho a jessica pozo el paradero de moises, Altamente peligroso no le digas ni tu nombre o te delatará','DELATORES','SI','img/avatares/joseabel.jpeg');
 
-insert into personajes(nombre, apellidos,biografia,categoria,wanted,foto) values ('Jessica Pozo','La mas peligrosa de todos sin duda, despues de hackear la nasa y ser culpable de la desaparicion de Moises, nadie sabe su paradero actual. En busca y captura por la INTERPOL','CIBERCRIMINALES','SI','img/avatares/jessica.jpg');
+insert into personajes(nombre, apellidos,biografia,categoria,wanted,foto) values ('Jessica', 'Pozo','La mas peligrosa de todos sin duda, despues de hackear la nasa y ser culpable de la desaparicion de Moises, nadie sabe su paradero actual. En busca y captura por la INTERPOL','CIBERCRIMINALES','SI','img/avatares/jessica.jpg');
 
